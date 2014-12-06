@@ -1,0 +1,74 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+    "settings":
+    {
+        "rulers": [ 80, 100, 120 ],
+        "ctags_command": "ctags -R -f .tags /usr/include",
+        "sublimeclang_recompile_delay": 1000,
+        "sublimeclang_options": [
+            /* automake */
+            "-DHAVE_CONFIG_H",
+            "-I${folder:${project_path:iexutils.sublime-project}}",
+            "-std=gnu99",
+            "-g",
+            "-O3",
+            "-fno-guess-branch-probability",
+            "-Wno-unused-command-line-argument",
+            "-march=native",
+            /* pkg-config --cflags wireshark */
+            "-DWS_VAR_IMPORT=extern",
+            "-DHAVE_STDARG_H",
+            "-DWS_MSVC_NORETURN=",
+            "-pthread",
+            "-I/usr/include/wireshark",
+            "-I/usr/include/wireshark/epan",
+            "-I/usr/include/glib-2.0",
+            "-I/usr/lib64/glib-2.0/include"
+        ],
+        "AStyleFormatter":
+        {
+            "options_c":
+            {
+                "add-brackets": false,
+                "autoformat_on_save": true,
+                "style": "gnu",
+                "indent-spaces": 2,
+                "indent-switches": 2,
+                "indent-namespaces": 2,
+                "indent-preprocessor": true,
+                "max-code-length": 110,
+                "max-instatement-indent": 120,
+                "min-conditional-indent": 0,
+                "pad-paren-out": false,
+                "pad-paren-in": true,
+                "pad-method-colon": "always",
+                "unpad-paren": true,
+                "use_only_additional_options": false,
+                "additional_options_file": "",
+                "additional_options": []
+            }
+        }
+    },
+    "build_systems": [
+        {
+            "name": "IexSessionIp",
+            "selector": ["source.c.header", "source.c", "source.makefile"],
+            "shell": false,
+            "working_dir": "${project_path}",
+            "cmd": ["make", "-j8", "check"],
+            "variants": [
+                {
+                    "name": "IexSessionIp Clean",
+                    "cmd": ["make", "-j8", "clean"]
+                }
+            ]
+        }
+    ]
+
+}
