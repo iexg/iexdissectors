@@ -1,5 +1,5 @@
-/**
- * packet-iextops.c - Wireshark dissector for IEXAIO
+/*
+ * packet-iextp.c - Wireshark dissector for IEX TOPS Message Protocol
  *
  * Copyright (C) 2014 IEX Group, Inc.
  *
