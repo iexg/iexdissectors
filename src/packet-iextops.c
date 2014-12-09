@@ -102,7 +102,7 @@ typedef struct _iextops_msg
   guint32 bid_size;
   gint64  bid_price;
   gint64  ask_price;
-  gint32  ask_size;
+  guint32 ask_size;
 } __attribute__( ( packed ) ) iextops_msg;
 
 /* Classwide Vars */
@@ -167,7 +167,7 @@ dissect_iextops( tvbuff_t    *tvb __attribute__( ( unused ) ),
                        ( price / 10000 ), ( price - ( ( price / 10000 ) * 10000 ) ) );
 
   price = tvb_get_letoh64( tvb, offsetof( iextops_msg, ask_price ) );
-  proto_tree_add_text( ptree, tvb, offsetof( iextops_msg, ask_price ), sizeof( guint64 ),
+  proto_tree_add_text( ptree, tvb, offsetof( iextops_msg, ask_price ), sizeof( gint64 ),
                        "Ask Price: %ld.%05ld", ( price / 10000 ), ( price - ( ( price / 10000 ) * 10000 ) ) );
   proto_tree_add_item( ptree, hf_iextops_filter[IEXTOPS_HF_ASKSIZE], tvb, offsetof( iextops_msg, ask_size ),
                        sizeof( guint32 ), ENC_LITTLE_ENDIAN );
