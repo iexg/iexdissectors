@@ -136,9 +136,11 @@ dissect_iextp( tvbuff_t    *tvb,
 {
   guint16 protocol;
   guint16 msg_count;
+  guint16 msg_len;
   guint32 session;
   guint32 channel;
   gint64 seqno;
+  gint64 offset;
   dissector_handle_t subproto_handle;
 
   col_clear( pinfo->cinfo, COL_INFO );
@@ -148,18 +150,44 @@ dissect_iextp( tvbuff_t    *tvb,
   session = tvb_get_h_guint32(tvb, offsetof(iextp_seg, session ));
   channel = tvb_get_h_guint32(tvb, offsetof(iextp_seg, channel ));
   seqno = tvb_get_letoh64( tvb, offsetof( iextp_seg, first_seqno ) );
+  offset = tvb_get_letoh64( tvb, offsetof( iextp_seg, offset ) );
+  msg_len = tvb_get_h_guint16( tvb, offsetof(iextp_seg, length ) );
 
   subproto_handle = dissector_get_uint_handle( iextp_protocol_dissector_table, protocol );
   if ( NULL != subproto_handle )
     {
       col_set_str( pinfo->cinfo, COL_PROTOCOL, dissector_handle_get_short_name( subproto_handle ) );
-      col_add_fstr( pinfo->cinfo, COL_INFO, "%s: Channel: %u, Session: %u, Message: %ld - %ld",
-                    dissector_handle_get_short_name( subproto_handle ), channel, session, seqno, seqno + msg_count - 1 );
+
+      if ( msg_len == 0 )
+        {
+          col_add_fstr( pinfo->cinfo, COL_INFO, "Protocol: %s (%d): Channel: %u, Session: %u, Heartbeat, Next byte: %ld, Next message: %ld",
+                        dissector_handle_get_short_name( subproto_handle ), protocol, channel, session, offset, seqno);
+        }
+      else if ( msg_count == 1 )
+        {
+          col_add_fstr( pinfo->cinfo, COL_INFO, "Protocol: %s (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld",
+                        dissector_handle_get_short_name( subproto_handle ), protocol, channel, session, offset, offset + msg_len - 1, seqno );
+        }
+      else
+        {
+          col_add_fstr( pinfo->cinfo, COL_INFO, "Protocol: %s (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld - %ld",
+                        dissector_handle_get_short_name( subproto_handle ), protocol, channel, session, offset, offset + msg_len - 1, seqno, seqno + msg_count - 1 );
+        }
+    }
+  else if ( msg_len == 0 )
+    {
+      col_add_fstr( pinfo->cinfo, COL_INFO, "Protocol: Unknown (%d): Channel: %u, Session: %u, Heartbeat, Next byte: %ld, Next message: %ld",
+                    protocol, channel, session, offset, seqno );
+    }
+  else if ( msg_count == 1 )
+    {
+      col_add_fstr( pinfo->cinfo, COL_INFO, "Protocol: Unknown (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld",
+                    protocol, channel, session, offset, offset + msg_len - 1, seqno );
     }
   else
     {
-      col_add_fstr( pinfo->cinfo, COL_INFO, "Unknown (%d): Channel: %u, Session: %u, Message: %ld - %ld",
-                    protocol, channel, session, seqno, seqno + msg_count - 1 );
+      col_add_fstr( pinfo->cinfo, COL_INFO, "Protocol: Unknown (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld - %ld",
+                    protocol, channel, session, offset, offset + msg_len - 1, seqno, seqno + msg_count - 1 );
     }
 
   if ( NULL != ptree )
