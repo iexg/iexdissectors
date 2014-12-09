@@ -45,11 +45,14 @@
 
 #define IEXTP_PROTO_IEXTOPS 32769
 #define IEXTOPS_SYMBOL_LEN 8
+#define IEXTOPS_FLAGS_BITLEN 8
 
 typedef enum _iextops_flags
 {
-  IEXTOPS_FLAGS_HALTED     = 0x80,
-  IEXTOPS_FLAGS_PREPOSTMKT = 0x40
+  IEXTOPS_FLAGS_PREPOSTMKT = 1 << 7,
+  IEXTOPS_FLAGS_HALTED     = 1 << 8,
+
+  IEXTOPS_FLAGS_ALL        = 0xc0
 } iextops_flags;
 
 /* Fields */
@@ -140,10 +143,13 @@ dissect_iextops( tvbuff_t    *tvb __attribute__( ( unused ) ),
 
   proto_tree_add_item( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS], tvb, offsetof( iextops_msg, flags ),
                        sizeof( guint8 ), ENC_NA );
-  proto_tree_add_boolean( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_HALTED], tvb,
-                          offsetof( iextops_msg, flags ), 1, tvb_get_bits8( tvb, offsetof( iextops_msg, flags ), 8 ) );
-  proto_tree_add_boolean( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_PREPOSTMKT], tvb,
-                          offsetof( iextops_msg, flags ), 1, tvb_get_bits8( tvb, offsetof( iextops_msg, flags ), 8 ) );
+
+  proto_tree_add_bits_item(ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_HALTED], tvb, offsetof(iextops_msg, flags) * 8 + 0, 1, ENC_LITTLE_ENDIAN);
+  proto_tree_add_bits_item(ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_PREPOSTMKT], tvb, offsetof(iextops_msg, flags) * 8 + 1, 1, ENC_LITTLE_ENDIAN);
+  // proto_tree_add_boolean( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_HALTED], tvb,
+  //                         offsetof( iextops_msg, flags ), 1, tvb_get_bits8( tvb, offsetof( iextops_msg, flags ), 8 ) );
+  // proto_tree_add_boolean( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_PREPOSTMKT], tvb,
+  //                         offsetof( iextops_msg, flags ), 1, tvb_get_bits8( tvb, offsetof( iextops_msg, flags ), 8 ) );
 
   tv.secs = ( gint64 ) tvb_get_letoh64( tvb, offsetof( iextops_msg, timestamp ) ) / 1000000000L;
   tv.nsecs = ( gint )( tvb_get_letoh64( tvb, offsetof( iextops_msg, timestamp ) ) - ( tv.secs * 1000000000L ) );
@@ -204,7 +210,7 @@ proto_register_iextops( void )
         .type    = FT_UINT8,
         .display = BASE_HEX,
         .strings = NULL,
-        .bitmask = 0xf,
+        .bitmask = 0xFF,
         .blurb   = "The flags for a given message",
         HFILL
       }
@@ -215,9 +221,9 @@ proto_register_iextops( void )
         .name    = "Halted",
         .abbrev  = "iextops.flags.halted",
         .type    = FT_BOOLEAN,
-        .display = 12,
+        .display = IEXTOPS_FLAGS_BITLEN,
         .strings = TFS( &tfs_yes_no ),
-        .bitmask = IEXTOPS_FLAGS_HALTED,
+        .bitmask = 0x0,
         .blurb   = "The symbol is halted",
         HFILL
       }
@@ -228,9 +234,9 @@ proto_register_iextops( void )
         .name    = "Pre/Post-Market",
         .abbrev  = "iextops.flags.prepost",
         .type    = FT_BOOLEAN,
-        .display = 12,
+        .display = IEXTOPS_FLAGS_BITLEN,
         .strings = TFS( &tfs_yes_no ),
-        .bitmask = IEXTOPS_FLAGS_PREPOSTMKT,
+        .bitmask = 0x0,
         .blurb   = "This quote is valid outside of market hours",
         HFILL
       }
