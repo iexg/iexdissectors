@@ -43,7 +43,7 @@
                 "indent-namespaces": 2,
                 "indent-preprocessor": true,
                 "max-code-length": 110,
-                "max-instatement-indent": 120,
+                "max-instatement-indent": 100,
                 "min-conditional-indent": 0,
                 "pad-paren-out": false,
                 "pad-paren-in": true,
