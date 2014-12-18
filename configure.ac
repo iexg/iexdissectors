@@ -90,25 +90,15 @@ AC_SUBST([DISSECTOR_DIR], [$dissectordir])
 # ==============================================================================
 # 4. checks for programs
 
-AC_CHECK_PROGS([PCAPCONFIG], [pcap-config])
-if test x"$PCAPCONFIG" = "x"; then
-    AC_MSG_ERROR([libpcap is required])
-fi
-
-PCAP_CFLAGS=`$PCAPCONFIG --cflags`
-AC_SUBST(PCAP_CFLAGS)
-
-PCAP_LDFLAGS=`$PCAPCONFIG --additional-libs`
-AC_SUBST(PCAP_LDFLAGS)
-
-PCAP_LIBS=`$PCAPCONFIG --libs`
-AC_SUBST(PCAP_LIBS)
 
 # ==============================================================================
 # 5.  checks for libraries
 
-PKG_CHECK_MODULES([WIRESHARK], [wireshark])
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
+PKG_CHECK_MODULES([WIRESHARK], [wireshark], [], [
+	WIRESHARK_CFLAGS="-DWS_VAR_IMPORT=extern -DHAVE_STDARG_H -DWS_MSVC_NORETURN= -I/usr/include/wireshark -I/usr/include/wireshark/epan $GLIB_CFLAGS"
+	WIRESHARK_LIBS="-Wl,--export-dynamic -lwireshark -lwiretap $GLIB_LIBS"
+])
 
 # ==============================================================================
 # 6.  checks for header files
