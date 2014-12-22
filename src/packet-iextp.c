@@ -161,20 +161,23 @@ dissect_iextp( tvbuff_t    *tvb,
       if ( msg_len == 0 )
         {
           col_add_fstr( pinfo->cinfo, COL_INFO,
-                        "Protocol: %s (%d): Channel: %u, Session: %u, Heartbeat, Next byte: %ld, Next message: %ld",
+                        "Protocol: %s (%" G_GUINT16_FORMAT "): Channel: %" G_GUINT32_FORMAT ", Session: %" G_GUINT32_FORMAT
+                        ", Heartbeat, Next byte: %" G_GINT64_FORMAT ", Next message: %" G_GINT64_FORMAT,
                         dissector_handle_get_short_name( subproto_handle ), protocol, channel, session, offset, seqno );
         }
       else if ( msg_count == 1 )
         {
           col_add_fstr( pinfo->cinfo, COL_INFO,
-                        "Protocol: %s (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld",
+                        "Protocol: %s (%" G_GUINT16_FORMAT "): Channel: %" G_GUINT32_FORMAT ", Session: %" G_GUINT32_FORMAT ", Bytes: %"
+                        G_GINT64_FORMAT " - %" G_GINT64_FORMAT ", Message: %" G_GINT64_FORMAT,
                         dissector_handle_get_short_name( subproto_handle ), protocol, channel, session, offset, offset + msg_len - 1,
                         seqno );
         }
       else
         {
           col_add_fstr( pinfo->cinfo, COL_INFO,
-                        "Protocol: %s (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld - %ld",
+                        "Protocol: %s (%" G_GUINT16_FORMAT "): Channel: %" G_GUINT32_FORMAT ", Session: %" G_GUINT32_FORMAT ", Bytes: %"
+                        G_GINT64_FORMAT " - %" G_GINT64_FORMAT ", Messages: %" G_GINT64_FORMAT " - %" G_GINT64_FORMAT,
                         dissector_handle_get_short_name( subproto_handle ), protocol, channel, session, offset, offset + msg_len - 1,
                         seqno, seqno + msg_count - 1 );
         }
@@ -182,19 +185,22 @@ dissect_iextp( tvbuff_t    *tvb,
   else if ( msg_len == 0 )
     {
       col_add_fstr( pinfo->cinfo, COL_INFO,
-                    "Protocol: Unknown (%d): Channel: %u, Session: %u, Heartbeat, Next byte: %ld, Next message: %ld",
+                    "Protocol: Unknown (%" G_GUINT16_FORMAT "): Channel: %" G_GUINT32_FORMAT ", Session: %" G_GUINT32_FORMAT
+                    ", Heartbeat, Next byte: %" G_GINT64_FORMAT ", Next message: %" G_GINT64_FORMAT,
                     protocol, channel, session, offset, seqno );
     }
   else if ( msg_count == 1 )
     {
       col_add_fstr( pinfo->cinfo, COL_INFO,
-                    "Protocol: Unknown (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld",
+                    "Protocol: Unknown (%" G_GUINT16_FORMAT "): Channel: %" G_GUINT32_FORMAT ", Session: %" G_GUINT32_FORMAT
+                    ", Bytes: %" G_GINT64_FORMAT " - %" G_GINT64_FORMAT ", Message: %" G_GINT64_FORMAT,
                     protocol, channel, session, offset, offset + msg_len - 1, seqno );
     }
   else
     {
       col_add_fstr( pinfo->cinfo, COL_INFO,
-                    "Protocol: Unknown (%d): Channel: %u, Session: %u, Bytes: %ld - %ld, Message: %ld - %ld",
+                    "Protocol: Unknown (%" G_GUINT16_FORMAT "): Channel: %" G_GUINT32_FORMAT ", Session: %" G_GUINT32_FORMAT
+                    ", Bytes: %" G_GINT64_FORMAT " - %" G_GINT64_FORMAT ", Messages: %" G_GINT64_FORMAT " - %" G_GINT64_FORMAT,
                     protocol, channel, session, offset, offset + msg_len - 1, seqno, seqno + msg_count - 1 );
     }
 
