@@ -4,9 +4,11 @@ This module contains a set of wireshark dissectors for the IEX proprietary proto
 
 ## What it is
 
-As of the time of writing, this plugin will decode the [IEX TOPS market data feed][http://www.iextrading.com/docs/IEX+TOPS+Spec.pdf] as seen within the [IEX Transport Protocol][http://iextrading.com/docs/IEX+Transport+Spec.pdf]. Here's an example of a tshark (console) decode of sample (make believe) data:
+As of the time of writing, this plugin will decode the [IEX TOPS market data feed](http://www.iextrading.com/docs/IEX+TOPS+Spec.pdf) as seen within the [IEX Transport Protocol](http://iextrading.com/docs/IEX+Transport+Spec.pdf). Here's an example of a decode of sample (make believe) data:
 
 ![Example TOPS Decode](https://raw.githubusercontent.com/iexg/iexdissectors/master/docs/sshot1.jpg)
+
+And from within tshark (console):
 
 ```
 Frame 1: 346 bytes on wire (2768 bits), 346 bytes captured (2768 bits)
