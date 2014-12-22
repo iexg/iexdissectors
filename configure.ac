@@ -103,6 +103,7 @@ PKG_CHECK_MODULES([WIRESHARK], [wireshark], [], [
 # ==============================================================================
 # 6.  checks for header files
 
+# Manual check required because Ubuntu's libwireshark-dev pkgconfig is b0rked
 AC_CHECK_HEADERS_ONCE([stdarg.h])
 
 # ==============================================================================
@@ -122,6 +123,7 @@ AC_PROG_CC_STDC
 #AC_SEARCH_LIBS([roundl], [m])
 
 # Adjust CFLAGS here so as not to break tests elsewhere
+# Hardcode WIRESHARK_CFLAGS wackiness because Ubuntu
 
 CPPFLAGS="-Wall -Werror -Wextra -Wpadded -Wstrict-aliasing=2 -DWS_VAR_IMPORT=extern -DWS_MSVC_NORETURN="
 CFLAGS="-g -O3 -fno-guess-branch-probability -march=native"
