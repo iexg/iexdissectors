@@ -96,12 +96,15 @@ AC_SUBST([DISSECTOR_DIR], [$dissectordir])
 
 PKG_CHECK_MODULES([GLIB], [glib-2.0])
 PKG_CHECK_MODULES([WIRESHARK], [wireshark], [], [
-	WIRESHARK_CFLAGS="-DWS_VAR_IMPORT=extern -DHAVE_STDARG_H -DWS_MSVC_NORETURN= -I/usr/include/wireshark -I/usr/include/wireshark/epan $GLIB_CFLAGS"
-	WIRESHARK_LIBS="-Wl,--export-dynamic -lwireshark -lwiretap $GLIB_LIBS"
+	WIRESHARK_CFLAGS="-DWS_VAR_IMPORT=extern -DWS_MSVC_NORETURN= -I/usr/include/wireshark -I/usr/include/wireshark/epan"
+	WIRESHARK_LIBS="-Wl,--export-dynamic -lwireshark -lwiretap"
 ])
 
 # ==============================================================================
 # 6.  checks for header files
+
+AC_CHECK_HEADERS_ONCE([stdarg.h])
+
 # ==============================================================================
 # 7.  checks for types
 # ==============================================================================
@@ -120,7 +123,7 @@ AC_PROG_CC_STDC
 
 # Adjust CFLAGS here so as not to break tests elsewhere
 
-CPPFLAGS="-Wall -Werror -Wextra -Wpadded -Wstrict-aliasing=2"
+CPPFLAGS="-Wall -Werror -Wextra -Wpadded -Wstrict-aliasing=2 -DWS_VAR_IMPORT=extern -DWS_MSVC_NORETURN="
 CFLAGS="-g -O3 -fno-guess-branch-probability -march=native"
 
 AM_PROG_LIBTOOL

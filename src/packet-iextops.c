@@ -11,12 +11,12 @@
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 2.1 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -144,8 +144,10 @@ dissect_iextops( tvbuff_t    *tvb __attribute__( ( unused ) ),
   proto_tree_add_item( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS], tvb, offsetof( iextops_msg, flags ),
                        sizeof( guint8 ), ENC_NA );
 
-  proto_tree_add_bits_item(ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_HALTED], tvb, offsetof(iextops_msg, flags) * 8 + 0, 1, ENC_LITTLE_ENDIAN);
-  proto_tree_add_bits_item(ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_PREPOSTMKT], tvb, offsetof(iextops_msg, flags) * 8 + 1, 1, ENC_LITTLE_ENDIAN);
+  proto_tree_add_bits_item( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_HALTED], tvb,
+                            offsetof( iextops_msg, flags ) * 8 + 0, 1, ENC_LITTLE_ENDIAN );
+  proto_tree_add_bits_item( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_PREPOSTMKT], tvb,
+                            offsetof( iextops_msg, flags ) * 8 + 1, 1, ENC_LITTLE_ENDIAN );
   // proto_tree_add_boolean( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_HALTED], tvb,
   //                         offsetof( iextops_msg, flags ), 1, tvb_get_bits8( tvb, offsetof( iextops_msg, flags ), 8 ) );
   // proto_tree_add_boolean( ptree, hf_iextops_filter[IEXTOPS_HF_FLAGS_PREPOSTMKT], tvb,
@@ -163,12 +165,14 @@ dissect_iextops( tvbuff_t    *tvb __attribute__( ( unused ) ),
   proto_tree_add_item( ptree, hf_iextops_filter[IEXTOPS_HF_BIDSIZE], tvb, offsetof( iextops_msg, bid_size ),
                        sizeof( guint32 ), ENC_LITTLE_ENDIAN );
   price = tvb_get_letoh64( tvb, offsetof( iextops_msg, bid_price ) );
-  proto_tree_add_text( ptree, tvb, offsetof( iextops_msg, bid_price ), sizeof( gint64 ), "Bid Price: %ld.%05ld",
+  proto_tree_add_text( ptree, tvb, offsetof( iextops_msg, bid_price ), sizeof( gint64 ),
+                       "Bid Price: %" G_GINT64_FORMAT ".%05" G_GINT64_FORMAT,
                        ( price / 10000 ), ( price - ( ( price / 10000 ) * 10000 ) ) );
 
   price = tvb_get_letoh64( tvb, offsetof( iextops_msg, ask_price ) );
   proto_tree_add_text( ptree, tvb, offsetof( iextops_msg, ask_price ), sizeof( gint64 ),
-                       "Ask Price: %ld.%05ld", ( price / 10000 ), ( price - ( ( price / 10000 ) * 10000 ) ) );
+                       "Ask Price: %" G_GINT64_FORMAT ".%05" G_GINT64_FORMAT, ( price / 10000 ),
+                       ( price - ( ( price / 10000 ) * 10000 ) ) );
   proto_tree_add_item( ptree, hf_iextops_filter[IEXTOPS_HF_ASKSIZE], tvb, offsetof( iextops_msg, ask_size ),
                        sizeof( guint32 ), ENC_LITTLE_ENDIAN );
 }
