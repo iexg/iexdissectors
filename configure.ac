@@ -52,7 +52,7 @@ AC_PREREQ(2.59)
 
 # ==============================================================================
 # 2. AC_INIT(package, version, bug-report-address)
-define([VERSION_NUMBER], [0.0.1]) # For sharing the version number
+define([VERSION_NUMBER], [0.0.2]) # For sharing the version number
 AC_INIT([iexdissectors], [VERSION_NUMBER], [roc@iextrading.com])
 
 
