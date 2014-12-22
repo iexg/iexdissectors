@@ -125,7 +125,7 @@ make
 make install
 ```
 
-Assuming you are using the supported distros and have everything installed, it should 
+Assuming you are using the supported distros and have everything installed, it should just work.
 
 ### Other Environments
 
